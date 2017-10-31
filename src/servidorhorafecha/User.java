@@ -16,6 +16,8 @@ public class User {
     private int id;
     private String username;
     private SocketController socketcontroller;
+    public int intentos;
+    
     
     boolean permisos;
 
@@ -74,6 +76,14 @@ public class User {
 
     public void setPermisos(boolean permisos) {
         this.permisos = permisos;
+    }
+
+    public void setIntentos() {
+        this.intentos++;
+    }
+
+    public int getIntentos() {
+        return intentos;
     }
     
     

@@ -19,7 +19,7 @@ import javafx.scene.chart.PieChart;
 public class commandProcessor {
 
     public List<User> clients = new LinkedList<>();
-    private int intentos;
+    
     
     
     
@@ -76,64 +76,78 @@ public class commandProcessor {
                 }
     return false;
     }
+    
+    public String getUsers(){
+        String users="";
+        
+        for (User item:clients) {
+            if(!item.getUsername().equals(""))
+            users+=item.getId()+" "+item.getUsername()+";";
+        }
+        users=users.substring(0, users.length()-1);
+        
+        return users;
+    }
 
     public String responseCommand(User sender, String aCommand) {
         
         String response = "200";
         
         if(sender.permisos){
-        aCommand = aCommand.trim().toUpperCase();
+        aCommand = aCommand.trim();
             
-        if(aCommand.startsWith("REGISTER")){
-                intentos++;
-                if(intentos<4){
+        if(aCommand.toUpperCase().startsWith("REGISTER")){
+                sender.setIntentos();
+                if(sender.getIntentos()<4){
                     if(aCommand.length()==8){
-                        response="Ingrese un nombre de usuario";
+                        response="200 Ingrese un nombre de usuario";
                     }else{                        
                         String nombre=aCommand.substring(9).trim();
              if(Registrar(nombre)){
                  
                       if(ExistUsername(nombre)){
-                        response="EL nombre de usuario ya esta registrado";
-                        intentos--;
+                        response="201 EL nombre de usuario ya esta registrado";
+                        
                     }else{
-                    response="100 cliente registrado";
+                    response="101 cliente registrado";
                     sender.setUsername(nombre);
                     }
              
                   
              }else
-             response="200 ingrese minimo 8 caracteres";
+             response="204 ingrese minimo 8 caracteres";
                     }
                 }else{
                     sender.setPermisos(false);
-                    response="Limite de intentos excedido";
+                    response="206 Limite de intentos excedido";
                 }
                 
         }
         
-        if (aCommand.startsWith("SENDALL")) {
+        if (aCommand.toUpperCase().startsWith("SENDALL")) {
             if (SendAll(aCommand.substring(8),sender)) {
 
-                response = "100";
+                response = "103";
             }
-        }else if(aCommand.startsWith("SEND")){
+        }else if(aCommand.toUpperCase().startsWith("SEND")){
             String arreglo[]=aCommand.split(" ");
             
             int total=arreglo[1].length();
             if(writeText(arreglo[1].trim(),aCommand.substring(total+5))){
-             response="100";   
+             response="102";   
             }else
                 response="200";
             
         }
         
-        else if (aCommand.equals("NUMOFUSERS")) {
-            response = "100 ....." + this.getUsersCount();
-        }
+        else if (aCommand.toUpperCase().equals("NUMOFUSERS")) {
+            response = "105  " + this.getUsersCount();
+        }else if (aCommand.toUpperCase().equals("GETUSERS")) {
+            response = "106 " + this.getUsers();
+        }   
 
         }else
-           response="Limite de intentos excedidos";
+           response="206 Limite de intentos excedidos";
         return response;
     }
     

@@ -133,7 +133,8 @@ public class commandProcessor {
             String arreglo[]=aCommand.split(" ");
             
             int total=arreglo[1].length();
-            if(writeText(arreglo[1].trim(),aCommand.substring(total+5))){
+            String salida=aCommand.substring(total+5);
+            if(writeText(arreglo[1].trim(),salida)){
              response="102";   
             }else
                 response="200";

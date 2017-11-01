@@ -76,7 +76,7 @@ public class SocketController implements Runnable {
         commandProcessor comProc = new commandProcessor();
         writeText("100 BroadCast Server");
         
-        User user=new User(theCommandProcessor.clients.size()+1,this,true);
+        User user=new User(theCommandProcessor.clients.size()+100,this,true);
         theCommandProcessor.add1(user);
         
         
@@ -87,14 +87,14 @@ public class SocketController implements Runnable {
                 //writeText(command);
                 if (command.trim().toUpperCase().equals("QUIT")) {
                      close();
-                     theCommandProcessor.remove(this);
+                     theCommandProcessor.remove(user);
                     quit = true;
                 } else {
                     writeText(theCommandProcessor.responseCommand(user,command));
                 }
             }
             else{
-            theCommandProcessor.remove(this);
+            theCommandProcessor.remove(user);
             quit=true;
             }
         }

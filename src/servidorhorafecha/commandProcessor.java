@@ -5,6 +5,7 @@
  */
 package servidorhorafecha;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -28,17 +29,23 @@ public class commandProcessor {
         clients.add(socketController);
     }
 
-    public boolean remove(SocketController socketController)
+    public boolean remove(User socketController)
     {
         return clients.remove(socketController);
     }
     
-    public boolean writeText(String username,String text) {
+    public boolean writeText(String username,String text,User sender) {
 
         for (User client:clients) {
             if(username.trim().equals(client.getUsername().trim()))
             {
-                client.getSocketcontroller().writeText(text);
+                DateFormat formatoHora = new SimpleDateFormat("HHmmss");
+                DateFormat formatoFecha = new SimpleDateFormat("yyyyMMdd");
+                
+                Date fechaActual = new Date();
+                String id=sender.getId()+formatoFecha.format(fechaActual)+formatoHora.format(fechaActual);
+                
+                client.getSocketcontroller().writeText(id+" "+text);
                 return true;
             }
         }
@@ -134,7 +141,7 @@ public class commandProcessor {
             
             int total=arreglo[1].length();
             String salida=aCommand.substring(total+5);
-            if(writeText(arreglo[1].trim(),salida)){
+            if(writeText(arreglo[1].trim(),salida,sender)){
              response="102";   
             }else
                 response="200";
